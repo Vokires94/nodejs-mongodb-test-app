@@ -57,7 +57,6 @@ app.post("/register", (request, response) => {
         })
         // catch error if the new user wasn't added successfully to the database
         .catch((error) => {
-          console.log(error);
           response.status(500).send({
             message: "Error creating user",
             error,
@@ -65,10 +64,10 @@ app.post("/register", (request, response) => {
         });
     })
     // catch error if the password hash isn't successful
-    .catch((e) => {
+    .catch((error) => {
       response.status(500).send({
         message: "Password was not hashed successfully",
-        e,
+        error,
       });
     });
 });
@@ -121,10 +120,10 @@ app.post("/login", (request, response) => {
         });
     })
     // catch error if email does not exist
-    .catch((e) => {
+    .catch((error) => {
       response.status(404).send({
         message: "Email not found",
-        e,
+        error,
       });
     });
 });
