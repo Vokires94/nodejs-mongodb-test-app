@@ -1,14 +1,11 @@
 const auth = require("./auth");
 const express = require("express");
-const cors = require("cors");
 const app = express();
 const bodyParser = require('body-parser');
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const dbConnect = require("./db/dbConnect");
 const User = require("./db/userModel");
-
-app.use(cors());
 
 // Curb Cores Error by adding a header here
 app.use((req, res, next) => {
