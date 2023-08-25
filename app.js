@@ -26,7 +26,7 @@ dbConnect();
 
 // body parser configuration
 app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/", (request, response, next) => {
   response.json({ message: "Hey! This is your server response!" });
@@ -39,10 +39,22 @@ app.post("/register", (request, response) => {
   bcrypt
     .hash(request.body.password, 10)
     .then((hashedPassword) => {
+
+      //   create JWT token
+      const token = jwt.sign(
+        {
+          email: request.body.email,
+          password: hashedPassword,
+        },
+        "RANDOM-TOKEN",
+        { expiresIn: "24h" }
+      );
+
       // create a new user instance and collect the data
       const user = new User({
         email: request.body.email,
         password: hashedPassword,
+        token
       });
 
       // save the new user
@@ -87,7 +99,7 @@ app.post("/login", (request, response) => {
         .then((passwordCheck) => {
 
           // check if password matches
-          if(!passwordCheck) {
+          if (!passwordCheck) {
             return response.status(400).send({
               message: "Passwords does not match",
               error,
@@ -103,6 +115,8 @@ app.post("/login", (request, response) => {
             "RANDOM-TOKEN",
             { expiresIn: "24h" }
           );
+
+          user.token = token;
 
           //   return success response
           response.status(200).send({
@@ -123,6 +137,26 @@ app.post("/login", (request, response) => {
     .catch((error) => {
       response.status(404).send({
         message: "Email not found",
+        error,
+      });
+    });
+});
+
+// logout endpoint
+app.put("/logout", (request, response) => {
+  // update user
+  User.findOneAndUpdate({email: request.body.email}, {token: ""}, {new: true})
+    // if user updated
+    .then(() => {
+      //  return success response
+      response.status(200).send({
+        message: "Logout Successful",
+      });
+    })
+    // catch error if email does not exist
+    .catch((error) => {
+      response.status(404).send({
+        message: "Logout error",
         error,
       });
     });
