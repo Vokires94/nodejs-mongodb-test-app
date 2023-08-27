@@ -68,6 +68,34 @@ app.delete("/products/delete", async (request, response) => {
   }
 });
 
+// product post new items endpoint
+app.post("/products/add", (request, response) => {
+
+  // create a new product instance and collect the data
+  const product = new Products({
+    items: request.body.items,
+    amount: request.body.amount,
+  });
+
+  // save the new product
+  product
+    .save()
+    // return success if the new product is added to the database successfully
+    .then((result) => {
+      response.status(201).send({
+        message: "Product Created Successfully",
+        result,
+      });
+    })
+    // catch error if the new product wasn't added successfully to the database
+    .catch((error) => {
+      response.status(500).send({
+        message: "Error creating product",
+        error,
+      });
+    });
+});
+
 // register endpoint
 app.post("/register", (request, response) => {
   // hash the password
