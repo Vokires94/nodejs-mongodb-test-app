@@ -6,6 +6,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const dbConnect = require("./db/dbConnect");
 const User = require("./db/userModel");
+const Products = require("./db/productsModel");
 
 // Curb Cores Error by adding a header here
 app.use((req, res, next) => {
@@ -31,6 +32,25 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.get("/", (request, response, next) => {
   response.json({ message: "Hey! This is your server response!" });
   next();
+});
+
+// products get endpoint
+app.get("/products", (request, response) => {
+  const products = Products.find()
+  products
+  .then((result) => {
+    response.status(201).send({
+      message: "Products received",
+      result,
+    });
+  })
+    // catch error if the no products table in database
+    .catch((error) => {
+      response.status(500).send({
+        message: "Error getting products",
+        error,
+      });
+    });
 });
 
 // register endpoint
@@ -145,7 +165,7 @@ app.post("/login", (request, response) => {
 // logout endpoint
 app.put("/logout", (request, response) => {
   // update user
-  User.findOneAndUpdate({email: request.body.email}, {token: ""}, {new: true})
+  User.findOneAndUpdate({ email: request.body.email }, { token: "" }, { new: true })
     // if user updated
     .then(() => {
       //  return success response
