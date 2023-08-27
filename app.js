@@ -38,12 +38,12 @@ app.get("/", (request, response, next) => {
 app.get("/products", (request, response) => {
   const products = Products.find()
   products
-  .then((result) => {
-    response.status(201).send({
-      message: "Products received",
-      result,
-    });
-  })
+    .then((result) => {
+      response.status(201).send({
+        message: "Products received",
+        result,
+      });
+    })
     // catch error if the no products table in database
     .catch((error) => {
       response.status(500).send({
@@ -51,6 +51,21 @@ app.get("/products", (request, response) => {
         error,
       });
     });
+});
+
+// product delete endpoint
+app.delete("/products/delete", async (request, response) => {
+  try {
+    const row = await Products.deleteOne({ _id: request.query.id });
+    response.status(201).send({
+      message: row,
+    });
+  }
+  catch (err) {
+    response.status(500).send({
+      message: "Error ",
+    });
+  }
 });
 
 // register endpoint
