@@ -68,6 +68,27 @@ app.delete("/products/delete", async (request, response) => {
   }
 });
 
+// product post update items endpoint
+app.post("/products/update", async (request, response) => {
+
+  const doc = await Products.findOne({ _id: request.body.id });
+  try {
+    const product = await doc.updateOne({
+      items: request.body.items,
+      amount: request.body.amount,
+    });
+    response.status(201).send({
+      message: 'Updated Successfully',
+    });
+  }
+  catch (err) {
+    response.status(500).send({
+      message: "Error ",
+    });
+  }
+
+});
+
 // product post new items endpoint
 app.post("/products/add", (request, response) => {
 
