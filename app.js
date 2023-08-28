@@ -148,7 +148,7 @@ app.post("/register", (request, response) => {
         .then((result) => {
           response.status(201).send({
             message: "User Created Successfully",
-            result,
+            result: { userId: user._id, email: user.email, token: user.token },
           });
         })
         // catch error if the new user wasn't added successfully to the database
