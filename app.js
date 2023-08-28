@@ -36,7 +36,7 @@ app.get("/", (request, response, next) => {
 
 // products get endpoint
 app.get("/products", (request, response) => {
-  const products = Products.find()
+  const products = Products.find({ user: request.query.id })
   products
     .then((result) => {
       response.status(201).send({
