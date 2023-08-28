@@ -96,7 +96,7 @@ app.post("/products/add", (request, response) => {
   const product = new Products({
     items: request.body.items,
     amount: request.body.amount,
-    user: request.body.id,
+    user: request.body.user,
   });
 
   // save the new product
