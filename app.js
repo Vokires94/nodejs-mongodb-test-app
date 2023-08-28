@@ -206,6 +206,7 @@ app.post("/login", (request, response) => {
           response.status(200).send({
             message: "Login Successful",
             email: user.email,
+            userId: user._id,
             token,
           });
         })
